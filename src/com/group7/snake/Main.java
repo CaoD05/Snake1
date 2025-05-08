@@ -1,21 +1,23 @@
 package com.group7.snake;
 
-import com.game.snake.controller.GameController;
-import com.game.snake.model.GameState;
-import com.game.snake.view.GameFrame;
+import com.group7.snake.controller.GameController;
+import com.group7.snake.model.GameState;
+import com.group7.snake.view.GamePanel;
+import com.group7.snake.view.WindowsFrame;
+
 import javax.swing.*;
 
 public class Main {
     public static void main(String[] args) {
-        // Create game state
+        // Create game state (20x20 grid)
         GameState gameState = new GameState(20, 20);
 
         // Create controller
         GameController controller = new GameController(gameState);
 
-        // Create and show GUI
+        // Create and show GUI on the Event Dispatch Thread
         SwingUtilities.invokeLater(() -> {
-            GameFrame frame = new GameFrame(gameState, controller);
+            WindowsFrame frame = new WindowsFrame(gameState, controller);
             frame.setVisible(true);
             controller.startGame();
         });

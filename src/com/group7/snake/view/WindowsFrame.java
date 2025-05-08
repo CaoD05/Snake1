@@ -1,19 +1,23 @@
 package com.group7.snake.view;
 
-import com.group7.snake.view.GamePanel;
+import com.group7.snake.controller.GameController;
+import com.group7.snake.model.GameState;
+
 import javax.swing.*;
 
-public class WindowsFrame
+public class WindowsFrame extends JFrame
 {
-    public WindowsFrame(){
-        int windowWidth = 800;
-        int windowHeight = 600;
-        JFrame frame = new JFrame("Snake");
-        frame.setSize(windowWidth, windowHeight);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-        frame.setResizable(false);
-        //
+    public WindowsFrame(GameState gameState, GameController controller){
+        setTitle("Snake UTC");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setResizable(false);
+
+        GamePanel gamePanel = new GamePanel(gameState);
+        add(gamePanel);
+
+        pack();
+        setLocationRelativeTo(null);
+        gamePanel.addKeyListener(controller.getInputHandler());
+        gamePanel.setFocusable(true);
     }
 }
