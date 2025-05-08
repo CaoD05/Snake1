@@ -5,16 +5,19 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import com.group7.snake.view.GamePanel;
 
 
 public class GameController {
     private final GameState gameState;
+    private final GamePanel gamePanel;
     private final Timer gameTimer;
     private final Input input;
     private boolean isRunning;
 
-    public GameController(GameState gameState) {
+    public GameController(GameState gameState,GamePanel gamePanel) {
         this.gameState = gameState;
+        this.gamePanel = gamePanel;
         this.input = new Input(this);
         this.isRunning = false;
 
@@ -31,15 +34,18 @@ public class GameController {
         gameState.reset();
         isRunning = true;
         gameTimer.start();
+        System.out.println("Game started!");
     }
 
     private void updateGame() {
         if (!isRunning) return;
+        if (gameState.getSnake().getDirection() == null) return;
 
-        gameState.getSnake().move(gameState.getBoard().getWidth(), gameState.getBoard().getHeight()); // Move the snake
+        gameState.getSnake().move(800/25, 800/25); // Move the snake
 
         // Check for collisions
         if (gameState.getSnake().checkCollision()) {
+
             gameOver();     // End game if self-collision
             return;
         }
@@ -54,7 +60,8 @@ public class GameController {
             gameState.getFood().spawn();
         }
 
-        gameState.update(); // Notify observers (e.g., the View)
+        gameState.update();
+        gamePanel.repaint();// Notify observers (e.g., the View)
 
     }
 

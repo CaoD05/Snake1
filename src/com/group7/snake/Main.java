@@ -10,14 +10,16 @@ import javax.swing.*;
 public class Main {
     public static void main(String[] args) {
         // Create game state (20x20 grid)
-        GameState gameState = new GameState(20, 20);
+        GameState gameState = new GameState(25, 25);
+
+        GamePanel gamePanel = new GamePanel(gameState);
 
         // Create controller
-        GameController controller = new GameController(gameState);
+        GameController controller = new GameController(gameState, gamePanel);
 
         // Create and show GUI on the Event Dispatch Thread
         SwingUtilities.invokeLater(() -> {
-            WindowsFrame frame = new WindowsFrame(gameState, controller);
+            WindowsFrame frame = new WindowsFrame(gamePanel, controller);
             frame.setVisible(true);
             controller.startGame();
         });

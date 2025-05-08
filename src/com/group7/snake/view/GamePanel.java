@@ -3,13 +3,16 @@ package com.group7.snake.view;
 import com.group7.snake.model.*;
 import javax.swing.*;
 import java.awt.*;
+import java.util.Observable;
+import java.util.Observer;
 
-public class GamePanel extends JPanel {
+public class GamePanel extends JPanel implements Observer {
     private static final int TILE_SIZE = 25;
     private final GameState gameState;
 
     public GamePanel(GameState gameState) {
         this.gameState = gameState;
+        gameState.addObserver(this);
         setPreferredSize(new Dimension(
                 gameState.getBoard().getWidth() * TILE_SIZE,
                 gameState.getBoard().getHeight() * TILE_SIZE
@@ -26,17 +29,25 @@ public class GamePanel extends JPanel {
             return;
         }
 
-        //drawLine(g);
-        //drawFood(g);
+
+        drawLine(g);
+        drawFood(g);
         drawSnake(g);
-        //drawScore(g);
+        drawScore(g);
     }
 
     private void drawLine(Graphics g) {
-        for(int i = 0; i < gameState.getBoard().getHeight()/TILE_SIZE; i++) {
-            //(x1, y1, x2, y2)
-            g.drawLine(i*TILE_SIZE, 0, i*TILE_SIZE, gameState.getBoard().getHeight());
-            g.drawLine(0, i*TILE_SIZE, gameState.getBoard().getWidth(), i*TILE_SIZE);
+        int pixelWidth = gameState.getBoard().getWidth() * TILE_SIZE;
+        int pixelHeight = gameState.getBoard().getHeight() * TILE_SIZE;
+
+        for (int i = 0; i <= gameState.getBoard().getWidth(); i++) {
+            int x = i * TILE_SIZE;
+            g.drawLine(x, 0, x, pixelHeight); // vertical lines
+        }
+
+        for (int i = 0; i <= gameState.getBoard().getHeight(); i++) {
+            int y = i * TILE_SIZE;
+            g.drawLine(0, y, pixelWidth, y); // horizontal lines
         }
     }
 
@@ -53,11 +64,12 @@ public class GamePanel extends JPanel {
 
         for(Point segment : snake.getBody()){
             if(first){
+                System.out.println("Drawing head at: " + segment.x + ", " + segment.y);
                 g.setColor(Color.GREEN);
                 first = false;
             }
             else {
-                g.setColor(new Color(45, 180, 0));
+                g.setColor(Color.GREEN);
             }
             g.fill3DRect(
                     segment.x * TILE_SIZE,
@@ -94,4 +106,10 @@ public class GamePanel extends JPanel {
 
         g.drawString(restartText, x, y);
     }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        repaint();  // Trigger the repaint when GameState is updated
+    }
+
 }

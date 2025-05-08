@@ -7,12 +7,11 @@ import javax.swing.*;
 
 public class WindowsFrame extends JFrame
 {
-    public WindowsFrame(GameState gameState, GameController controller){
+    public WindowsFrame(GamePanel gamePanel, GameController controller){
         setTitle("Snake UTC");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
 
-        GamePanel gamePanel = new GamePanel(gameState);
         add(gamePanel);
 
         pack();

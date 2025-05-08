@@ -23,7 +23,7 @@ public class GameState extends Observable {
     }
 
     public void reset() {
-        snake.reset(250, 250);
+        snake.reset(12,12);
         food.spawn();
         score = 0;
         gameOver = false;

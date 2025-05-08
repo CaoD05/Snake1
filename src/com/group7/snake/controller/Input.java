@@ -14,15 +14,18 @@ public class Input implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
+        System.out.println("Key pressed: " + e.getKeyCode());
         if (!controller.isRunning()) {
+            controller.startGame(); // First, reset everything
+
+            // Then handle first direction input
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_UP -> controller.changeDirection(Direction.UP);
                 case KeyEvent.VK_DOWN -> controller.changeDirection(Direction.DOWN);
                 case KeyEvent.VK_LEFT -> controller.changeDirection(Direction.LEFT);
                 case KeyEvent.VK_RIGHT -> controller.changeDirection(Direction.RIGHT);
-                default -> { return; } // Only respond to arrow keys
+                default -> { return; }
             }
-            controller.startGame(); // Start game on first arrow key press
             return;
         }
 
