@@ -3,16 +3,13 @@ package com.group7.snake.view;
 import com.group7.snake.model.*;
 import javax.swing.*;
 import java.awt.*;
-import java.util.Observable;
-import java.util.Observer;
 
-public class GamePanel extends JPanel implements Observer {
-    private static final int TILE_SIZE = 25;
+public class GamePanel extends JPanel {
+    private static final int TILE_SIZE = defaultValue.returnTile();
     private final GameState gameState;
 
     public GamePanel(GameState gameState) {
         this.gameState = gameState;
-        gameState.addObserver(this);
         setPreferredSize(new Dimension(
                 gameState.getBoard().getWidth() * TILE_SIZE,
                 gameState.getBoard().getHeight() * TILE_SIZE
@@ -24,16 +21,34 @@ public class GamePanel extends JPanel implements Observer {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        if (gameState.isGameOver()) {
-            drawGameOver(g);
-            return;
+        if (gameState.isFirst()) {
+            System.out.println("First");
+            g.setColor(Color.WHITE);
+            g.setFont(new Font("Arial", Font.BOLD, 24));
+            g.drawString("Press any arrow key to start!", 150, 300);// Adjust position as needed
+            g.setFont(new Font("Arial", Font.BOLD, 24));
+            g.drawString("ESC to pause",200, 440);
         }
+        else {
+            if (gameState.isGameOver()) {
+                drawGameOver(g);
+                return;
+            }
+            if (gameState.isPause()) {
+                drawPause(g);
+            }
 
+            drawLine(g);
+            drawFood(g);
+            drawSnake(g);
+            drawScore(g);
+        }
+    }
 
-        drawLine(g);
-        drawFood(g);
-        drawSnake(g);
-        drawScore(g);
+    private void drawPause(Graphics g) {
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("Arial", Font.BOLD, 24));
+        g.drawString("Pause", 150, 300);
     }
 
     private void drawLine(Graphics g) {
@@ -42,12 +57,12 @@ public class GamePanel extends JPanel implements Observer {
 
         for (int i = 0; i <= gameState.getBoard().getWidth(); i++) {
             int x = i * TILE_SIZE;
-            g.drawLine(x, 0, x, pixelHeight); // vertical lines
+            //g.drawLine(x, 0, x, pixelHeight); // vertical lines
         }
 
         for (int i = 0; i <= gameState.getBoard().getHeight(); i++) {
             int y = i * TILE_SIZE;
-            g.drawLine(0, y, pixelWidth, y); // horizontal lines
+            //g.drawLine(0, y, pixelWidth, y); // horizontal lines
         }
     }
 
@@ -75,6 +90,29 @@ public class GamePanel extends JPanel implements Observer {
                     segment.x * TILE_SIZE,
                     segment.y * TILE_SIZE,
                     TILE_SIZE, TILE_SIZE, true);
+        }
+
+        g.setColor(Color.WHITE);
+        int eyeSize = 6;
+        int headX = gameState.getSnake().getHead().x;
+        int headY = gameState.getSnake().getHead().y;
+        switch (gameState.getSnake().getDirection()) {
+            case Direction.RIGHT:
+                g.fillOval(headX*TILE_SIZE + 15, headY*TILE_SIZE + 4, eyeSize, eyeSize);
+                g.fillOval(headX*TILE_SIZE + 15, headY*TILE_SIZE + 16, eyeSize, eyeSize);
+                break;
+            case Direction.LEFT:
+                g.fillOval(headX*TILE_SIZE + 15, headY*TILE_SIZE + 4, eyeSize, eyeSize);
+                g.fillOval(headX*TILE_SIZE + 1, headY*TILE_SIZE + 16, eyeSize, eyeSize);
+                break;
+            case Direction.UP:
+                g.fillOval(headX*TILE_SIZE + 4, headY*TILE_SIZE + 10, eyeSize, eyeSize);
+                g.fillOval(headX*TILE_SIZE + 16, headY*TILE_SIZE + 10, eyeSize, eyeSize);
+                break;
+            case Direction.DOWN:
+                g.fillOval(headX*TILE_SIZE + 4, headY*TILE_SIZE + 10, eyeSize, eyeSize);
+                g.fillOval(headX*TILE_SIZE + 16, headY*TILE_SIZE + 10, eyeSize, eyeSize);
+                break;
         }
     }
 
@@ -105,11 +143,6 @@ public class GamePanel extends JPanel implements Observer {
         y = getHeight() / 2 + 30;
 
         g.drawString(restartText, x, y);
-    }
-
-    @Override
-    public void update(Observable o, Object arg) {
-        repaint();  // Trigger the repaint when GameState is updated
     }
 
 }

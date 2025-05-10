@@ -17,6 +17,7 @@ public class Snake {
     public Snake(int startX, int startY) {
         body = new ArrayList<>();
         body.add(new Point(startX, startY));
+        direction = null;
         growing = false;
     }
 
@@ -74,14 +75,15 @@ public class Snake {
         return false;
     }
 
-    public void reset(int x, int y) {
+    public void reset() {
         //remove all part of body
         body.clear();
         //add head
-        body.add(new Point(x, y));
+        body.add(defaultValue.returnSpawn());
+        direction = null;
         //set default
         growing = false;
-        System.out.println("Reset called with: " + x + "," + y);
+        System.out.println("Reset called with:" + defaultValue.returnSpawn());
     }
 
     // Getters

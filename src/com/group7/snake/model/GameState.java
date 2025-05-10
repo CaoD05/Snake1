@@ -1,33 +1,29 @@
 package com.group7.snake.model;
 
-import java.util.Observable;
-
-public class GameState extends Observable {
+public class GameState  {
     private final Snake snake;
     private final Food food;
     private final Board board;
     private int score;
     private boolean gameOver;
+    private boolean Pause;
+    private boolean isFirst = true;
 
     public GameState(int boardWidth, int boardHeight) {
         this.board = new Board(boardWidth, boardHeight);
-        this.snake = new Snake(boardWidth / 2, boardHeight / 2);
+        this.snake = new Snake(defaultValue.returnSpawnX(), defaultValue.returnSpawnY());
         this.food = new Food(boardWidth, boardHeight);
         this.score = 0;
         this.gameOver = false;
-    }
-
-    public void update() {
-        setChanged();
-        notifyObservers();
+        this.Pause = false;
     }
 
     public void reset() {
-        snake.reset(12,12);
+        snake.reset();
         food.spawn();
         score = 0;
         gameOver = false;
-        update();
+        Pause = false;
     }
 
     // Getters
@@ -36,6 +32,7 @@ public class GameState extends Observable {
     public Board getBoard() { return board; }
     public int getScore() { return score; }
     public boolean isGameOver() { return gameOver; }
+    public boolean isPause() { return Pause; }
 
     public void increaseScore() {
         score += 1;
@@ -43,5 +40,17 @@ public class GameState extends Observable {
 
     public void setGameOver(boolean gameOver) {
         this.gameOver = gameOver;
+    }
+
+    public void setPause(boolean pause) {
+        this.Pause = pause;
+    }
+
+    public boolean isFirst() {
+        return isFirst;
+    }
+
+    public void setFirst(boolean first) {
+        this.isFirst = first;
     }
 }

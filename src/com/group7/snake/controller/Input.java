@@ -29,6 +29,20 @@ public class Input implements KeyListener {
             return;
         }
 
+//        if (!controller.isRunning()) {
+//            // FIRST TIME ONLY: show instructions, wait for input
+//            if (controller.getGameState().isFirst()) {
+//                switch (e.getKeyCode()) {
+//                    case KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT -> {
+//                        controller.getGameState().setFirst(false);
+//                        controller.changeDirection(keyToDirection(e.getKeyCode()));
+//                        controller.startGame(); // Start the game
+//                    }
+//                }
+//            }
+//            return; // Do nothing on first frame if not arrow
+//        }
+
         // If game is already running, allow direction change (prevent 180° turn)
         Direction current = controller.getGameState().getSnake().getDirection();
         switch (e.getKeyCode()) {
@@ -45,6 +59,19 @@ public class Input implements KeyListener {
                 if (current != Direction.LEFT) controller.changeDirection(Direction.RIGHT);
                 break;
         }
+        if(e.getKeyCode() == KeyEvent.VK_ESCAPE && controller.isRunning()) {
+            controller.pauseGame();
+        }
+    }
+
+    private Direction keyToDirection(int keyCode) {
+        return switch (keyCode) {
+            case KeyEvent.VK_UP -> Direction.UP;
+            case KeyEvent.VK_DOWN -> Direction.DOWN;
+            case KeyEvent.VK_LEFT -> Direction.LEFT;
+            case KeyEvent.VK_RIGHT -> Direction.RIGHT;
+            default -> null;
+        };
     }
 
     @Override

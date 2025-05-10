@@ -4,6 +4,7 @@ import com.group7.snake.controller.GameController;
 import com.group7.snake.model.GameState;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class WindowsFrame extends JFrame
 {
@@ -18,5 +19,6 @@ public class WindowsFrame extends JFrame
         setLocationRelativeTo(null);
         gamePanel.addKeyListener(controller.getInputHandler());
         gamePanel.setFocusable(true);
+        gamePanel.setDoubleBuffered(true);
     }
 }

@@ -35,13 +35,15 @@ public class GameController {
         isRunning = true;
         gameTimer.start();
         System.out.println("Game started!");
+        gamePanel.repaint();
     }
 
     private void updateGame() {
         if (!isRunning) return;
+        gameState.setFirst(false);
         if (gameState.getSnake().getDirection() == null) return;
 
-        gameState.getSnake().move(800/25, 800/25); // Move the snake
+        gameState.getSnake().move(defaultValue.returnTile(), defaultValue.returnTile()); // Move the snake
 
         // Check for collisions
         if (gameState.getSnake().checkCollision()) {
@@ -60,20 +62,26 @@ public class GameController {
             gameState.getFood().spawn();
         }
 
-        gameState.update();
-        gamePanel.repaint();// Notify observers (e.g., the View)
+        gamePanel.repaint();
+    }
 
+    public void pauseGame() {
+        if(gameState.isPause() && !gameState.isFirst()) {
+            gameTimer.start();
+            gameState.setPause(false);
+            gamePanel.repaint();
+        } else if (!gameState.isPause() && !gameState.isFirst()) {
+            gameTimer.stop();
+            gameState.setPause(true);
+            gamePanel.repaint();
+        }
     }
 
     public void gameOver() {
         isRunning = false;
         gameTimer.stop();
         gameState.setGameOver(true);
-        gameState.update();
-    }
-
-    public void restartGame() {
-        startGame();
+        gamePanel.repaint();
     }
 
 //    public void changeDirection(Direction newDirection) {
@@ -95,7 +103,6 @@ public class GameController {
         return isRunning;
     }
 
-
     public Input getInputHandler() {
         return input;
     }
@@ -103,4 +110,6 @@ public class GameController {
     public GameState getGameState() {
         return gameState;
     }
+
+
 }
